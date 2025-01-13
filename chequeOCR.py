@@ -1,6 +1,19 @@
 from fastapi import FastAPI, UploadFile, File
 import os
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "./client_file_mandateocr1.json"
+import base64
+
+# Get base64-encoded credentials from the environment variable
+encoded_credentials = os.getenv("GOOGLE_APPLICATION_CREDENTIALS_B64")
+
+if encoded_credentials:
+    # Decode and save as a JSON file
+    with open("client_file_mandateocr1.json", "wb") as f:
+        f.write(base64.b64decode(encoded_credentials))
+
+    # Set the path to GOOGLE_APPLICATION_CREDENTIALS
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "client_file_mandateocr1.json"
+else:
+    raise EnvironmentError("GOOGLE_APPLICATION_CREDENTIALS_B64 environment variable is not set")
 
 from google.cloud import vision
 import cv2
