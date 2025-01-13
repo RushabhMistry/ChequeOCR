@@ -1,6 +1,7 @@
 from fastapi import FastAPI, UploadFile, File
 import os
 import base64
+from fastapi.middleware.cors import CORSMiddleware
 
 # Get base64-encoded credentials from the environment variable
 encoded_credentials = os.getenv("GOOGLE_APPLICATION_CREDENTIALS_B64")
@@ -24,6 +25,15 @@ from fastapi.staticfiles import StaticFiles
 import shutil
 
 app = FastAPI()
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow requests from any origin
+    allow_credentials=True,
+    allow_methods=["GET", "POST"],
+    allow_headers=["*"],
+)
 
 # Serve static files for images
 app.mount("/static", StaticFiles(directory="static"), name="static")
